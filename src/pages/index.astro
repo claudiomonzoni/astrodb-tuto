@@ -1,0 +1,58 @@
+---
+import { db, User, Category, Todo, eq } from "astro:db";
+const users = await db.select().from(User);
+const categorias = await db.select().from(Category);
+// usamos innerJoin para agregar los datos del user a la nueva constante de todo
+const todos = await db
+  .select()
+  .from(Todo)
+  //   agregamos info del user
+  .innerJoin(User, eq(Todo.user_id, User.id))
+  //   agregamos info de la categoria
+  .innerJoin(Category, eq(Todo.category_id, Category.id))
+  //   filtramos
+  .where(eq(User.username, "admin"));
+
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Astro</title>
+  </head>
+  <body>
+
+	<a href="/create-todo">Agregar tareas</a>
+
+
+    <h1>Usuarios</h1>
+    <ul>
+      {users.map((user) => <li>{user.username}</li>)}
+    </ul>
+
+    <h1>Categorias</h1>
+    <ul>
+      {categorias.map((cat) => <li>{cat.label}</li>)}
+    </ul>
+
+    <h1>Pendientes</h1>
+    <ul>
+      {
+        todos.map((pendiente) => (
+          <li>
+            <h3>{pendiente.Todo.title}</h3>
+            <p>{pendiente.Todo.description}</p>
+            <small>
+              {`
+		Usuario: ${pendiente.User.username} / Categoria: ${pendiente.Category.label}
+		`}
+            </small>
+          </li>
+        ))
+      }
+    </ul>
+  </body>
+</html>
