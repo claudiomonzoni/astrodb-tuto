@@ -9,10 +9,9 @@ const todos = await db
   //   agregamos info del user
   .innerJoin(User, eq(Todo.user_id, User.id))
   //   agregamos info de la categoria
-  .innerJoin(Category, eq(Todo.category_id, Category.id))
-  //   filtramos
-  .where(eq(User.username, "admin"));
-
+  .innerJoin(Category, eq(Todo.category_id, Category.id));
+//   filtramos
+// .where(eq(User.username, "admin"));
 ---
 
 <html lang="en">
@@ -24,9 +23,7 @@ const todos = await db
     <title>Astro</title>
   </head>
   <body>
-
-	<a href="/create-todo">Agregar tareas</a>
-
+    <a href="/create-todo">Agregar tareas</a>
 
     <h1>Usuarios</h1>
     <ul>
@@ -46,9 +43,7 @@ const todos = await db
             <h3>{pendiente.Todo.title}</h3>
             <p>{pendiente.Todo.description}</p>
             <small>
-              {`
-		Usuario: ${pendiente.User.username} / Categoria: ${pendiente.Category.label}
-		`}
+              {`Usuario: ${pendiente.User.username} / Categoria: ${pendiente.Category.label}`}
             </small>
           </li>
         ))
